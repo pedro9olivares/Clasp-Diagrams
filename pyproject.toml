@@ -1,0 +1,14 @@
+[project]
+name = "clasp-diagrams"
+version = "0.1.0"
+description = "A library for representing and manipulating clasp diagrams in knot theory."
+authors = [
+    { name = "Pedro Olivares", email = "pedro9olivares@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,9 @@
+.venv
+
+# Packaging
+*.egg-info/
+
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
