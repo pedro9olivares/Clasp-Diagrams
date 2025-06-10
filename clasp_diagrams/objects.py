@@ -87,8 +87,11 @@ class ClaspDiagram:
     def from_array(cls, array):
         """
         Factory method to create a Clasp from an array of chords.
+        m is the number of ChordForArray instances.
+
+        Time Complexity: O(m)
+        Space Complexity: O(m)
         """
-        # TODO: Add validation for clasp diagram object creation
         from clasp_diagrams.validators import validate_clasp_array
         validate_clasp_array(array) # O(m) time, O(m) space
         return cls(array=array)
