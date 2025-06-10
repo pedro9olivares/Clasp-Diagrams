@@ -1,20 +1,28 @@
-import numpy as np
-import sympy as sp
-from collections import namedtuple
+from pydantic.dataclasses import dataclass
 
 # Represents a chord with start/end points and properties for matrix computations.
-ChordForMatrix = namedtuple('ChordForMatrix', ['start_point', 'end_point', 'sign', 'height'])
+@dataclass(frozen=True)
+class ChordForMatrix:
+    start_point: int
+    end_point: int
+    sign: str
+    height: int
 
 # Represents a chord by index with associated properties for array computations.
-ChordForArray = namedtuple('ChordForArray', ['chord_idx', 'sign', 'height'])
+@dataclass(frozen=True)
+class ChordForArray:
+    chord_idx: int
+    sign: str
+    height: int
 
+# Represents a clasp diagram, our main object.
 class ClaspDiagram:
     """
     Represents a clasp diagram and stores various chord representations and algebraic invariants.
 
     Attributes:
-        matrix (list[ChordForMatrix] | None): 
-            A list of ChordForMatrix instances, which contain geometric data (start and end points).
+        matrix (tuple[ChordForMatrix] | None): 
+            A tuple of ChordForMatrix instances, which contain geometric data (start and end points).
         
         array (list[ChordForArray] | None): 
             A list of ChordForArray instances, used for fast numerical computations.
@@ -63,11 +71,16 @@ class ClaspDiagram:
             self.clasp_word = None
 
     @classmethod
-    def from_matrix(cls, matrix):
+    def from_matrix(cls, *, matrix):
         """
-        Factory method to create a Clasp from a matrix of chords.
+        Factory method to create a Clasp from a tuple of ChordForMatrix instances.
+        n is the number of ChordForMatrix instances.
+
+        Time Complexity: O(n)
+        Space Complexity: O(n)
         """
-        # TODO: Think if this is really necessary: Add matrix validation for clasp diagram object creation
+        from clasp_diagrams.validators import validate_clasp_matrix
+        validate_clasp_matrix(matrix)
         return cls(matrix=matrix)
     
     @classmethod
@@ -75,7 +88,7 @@ class ClaspDiagram:
         """
         Factory method to create a Clasp from an array of chords.
         """
-        # TODO: Think if this is really necessary: Add array validation for clasp diagram object creation
+        # TODO: Add validation for clasp diagram object creation
         return cls(array=array)
     
     def derive_array_from_matrix(self):
@@ -115,10 +128,16 @@ class ClaspDiagram:
         )
     
     def __eq__(self, other):
-        # TODO: Check equality between two clasp diagrams. They are the same if their matrices match.
-        raise NotImplementedError("Implement __eq__")
+        """
+        Checks equality between two clasp diagrams. They are the same if their matrices match.
+        """
+        if not isinstance(other, ClaspDiagram):
+            return NotImplemented
+        return self.matrix == other.matrix
     
     def __hash__(self):
-        # TODO: Hash the matrix.
-        raise NotImplementedError("Implement __hash__")
+        """
+        Hashes a clasp diagram via a hashing of the matrix, which is a tuple of namedtuples.
+        """
+        return hash(self.matrix)
          

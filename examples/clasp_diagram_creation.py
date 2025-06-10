@@ -10,19 +10,19 @@ print(another_chord, end='\n\n')
 
 # =============== Clasp diagram object creation ===============
 # Instantiation of a clasp diagram via matrix
-unknot = ClaspDiagram.from_matrix([])
-print(repr(unknot))
-print(str(unknot))
-
-trefoil = ClaspDiagram.from_matrix([ChordForMatrix(0, 2, '+', 2),
-                                    ChordForMatrix(1, 3, '+', 1)])
+trefoil = ClaspDiagram.from_matrix(matrix=(ChordForMatrix(0, 1, '-', 1),
+                                           ChordForMatrix(2, 3, '+', 2))
+                                    )
 print(repr(trefoil))
 print(str(trefoil))
+
+unknot = ClaspDiagram.from_matrix(matrix=())
+print(repr(unknot))
+print(str(unknot))
 
 # Comparisons are done via comparison of the clasp diagram matrix
 print(unknot is unknot)
 print(unknot is trefoil)
-
 
 # Instantiation of a clasp diagram via array
 
