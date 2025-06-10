@@ -104,12 +104,15 @@ class ClaspDiagram:
         validate_clasp_array(array) # O(m) time, O(m) space
 
         return array
-        
     
     def derive_matrix_from_array(self):
-        # TODO: (2) Do this derivation (array → matrix)
-        # A validation is added at the end...
-        raise NotImplementedError("Implement array → matrix conversion.")
+        from clasp_diagrams.transformations import transform_array_to_matrix
+        from clasp_diagrams.validators import validate_clasp_matrix
+
+        matrix = transform_array_to_matrix(self.array)
+        validate_clasp_matrix(matrix)
+
+        return matrix
     
     def generate_clasp_word(self):
         # TODO: (Postpone) Generate clasp word (algorithm is almost already done)
