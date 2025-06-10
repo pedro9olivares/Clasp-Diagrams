@@ -1,15 +1,9 @@
 from hypothesis import given, strategies as st
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray
-from clasp_diagrams.transformations import transform_matrix_to_array
-from clasp_diagrams.validators import validate_clasp_array
+from clasp_diagrams.transformations import transform_matrix_to_array, transform_array_to_matrix
+from clasp_diagrams.validators import validate_clasp_array, validate_clasp_matrix
+from clasp_diagrams.generators import random_valid_matrix, random_valid_array
 
-def make_valid_chord_for_matrix(idx: int, start: int, end: int, height: int) -> ChordForMatrix:
-    return ChordForMatrix(
-        start_point=start,
-        end_point=end,
-        sign='+' if idx % 2 == 0 else '-',
-        height=height
-    )
 
 @given(st.integers(min_value=1, max_value=100))
 def test_transform_matrix_to_array_produces_valid_array(n):
@@ -17,21 +11,12 @@ def test_transform_matrix_to_array_produces_valid_array(n):
     Generates a valid matrix of n ChordForMatrix instances and verifies that the
     transform_matrix_to_array function produces a valid array.
     """
+    print(f"Testing with n={n}")
 
-    # Allocate 2n unique positions from 0 to 2n-1
-    positions = list(range(2 * n))
-    import random
-    random.shuffle(positions)
+    matrix = random_valid_matrix(n)
 
-    matrix = []
-    for i in range(n):
-        sp = positions[2 * i]
-        ep = positions[2 * i + 1]
-        matrix.append(make_valid_chord_for_matrix(i, sp, ep, height=i + 1))
-
-    matrix = tuple(matrix)
     array = transform_matrix_to_array(matrix)
-
+    
     # Ensure output is a valid clasp array
     validate_clasp_array(array)
 
@@ -40,3 +25,25 @@ def test_transform_matrix_to_array_produces_valid_array(n):
 
     # All elements should be instances of ChordForArray
     assert all(isinstance(c, ChordForArray) for c in array)
+
+
+@given(st.integers(min_value=1, max_value=100))
+def test_transform_array_to_matrix_produces_valid_matrix(n):
+    """
+    Generates a valid array of n ChordForArray instances and verifies that the
+    transform_array_to_matrix function produces a valid matrix.
+    """
+    print(f"Testing with n={n}")
+    
+    array = random_valid_array(n)
+
+    matrix = transform_array_to_matrix(array)
+
+    # Ensure output is a valid clasp matrix
+    validate_clasp_matrix(matrix)
+
+    # Check size
+    assert len(matrix) == n
+
+    # All elements should be instances of ChordForMatrix
+    assert all(isinstance(c, ChordForMatrix) for c in matrix)
