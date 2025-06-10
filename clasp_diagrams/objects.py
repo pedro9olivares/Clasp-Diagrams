@@ -129,13 +129,17 @@ class ClaspDiagram:
             f")")
     
     def __str__(self):
-        matrix_str = "\n".join(
-            f"[{chord.start_point}, {chord.end_point}, {chord.sign}, {chord.height}]"
-            for chord in self.matrix
-        )
+        if len(self.matrix) == 0:
+            matrix_str = "[]"
+        else:
+            matrix_str = "\n".join(
+                f"[{chord.start_point}, {chord.end_point}, {chord.sign}, {chord.height}]"
+                for chord in self.matrix
+            )
+
         return (
             f"Clasp Diagram object\n"
-            f"{matrix_str}"
+            f"{matrix_str}\n"
             f"Alexander polynomial = {self.alexander}"
         )
     
