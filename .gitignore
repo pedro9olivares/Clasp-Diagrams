@@ -10,3 +10,7 @@ __pycache__/
 # Tests
 .hypothesis
 
+# Examples (TODO: polish and eventually publish)
+examples/
+
+
