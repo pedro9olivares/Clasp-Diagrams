@@ -80,7 +80,7 @@ class ClaspDiagram:
         Space Complexity: O(n)
         """
         from clasp_diagrams.validators import validate_clasp_matrix
-        validate_clasp_matrix(matrix)
+        validate_clasp_matrix(matrix) # O(n) time, O(n) space
         return cls(matrix=matrix)
     
     @classmethod
@@ -89,14 +89,18 @@ class ClaspDiagram:
         Factory method to create a Clasp from an array of chords.
         """
         # TODO: Add validation for clasp diagram object creation
+        from clasp_diagrams.validators import validate_clasp_array
+        validate_clasp_array(array) # O(m) time, O(m) space
         return cls(array=array)
     
     def derive_array_from_matrix(self):
         # TODO: Do this derivation (matrix → array)
+        # A validation is added at the end... 
         raise NotImplementedError("Implement matrix → array conversion.")
     
     def derive_matrix_from_array(self):
         # TODO: Do this derivation (array → matrix)
+        # A validation is added at the end...
         raise NotImplementedError("Implement array → matrix conversion.")
     
     def generate_clasp_word(self):
