@@ -90,7 +90,7 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
         raise ValueError(f"Some ChordForArray objects do not appear exactly twice (they might not the be the same object in memory): {invalid_chords}")
 
     # sign validation: signs must be either '+' or '-'
-    # id validation: check that all chord_idxs are in the range [1, m//2]
+    # id validation: check that all chord_idxs are in the range [1, m//2],
     # height validation: check that all chord_idxs are in the range [1, m//2],
     # (No need to check that chord_idxs or heights appear exactly twice; that was handled earlier with object identity)
     m = len(array)
@@ -106,5 +106,20 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
             raise ValueError(f"Invalid chord_idx encountered in {chord}. Expected in [1, {m//2}]")
         if not (1 <= chord.height <= m//2):
             raise ValueError(f"Invalid height encountered in {chord}. Expected in [1, {m//2}]")
+        
+    # id validation check 2: check that chord ids appear in ascending order
+    unique_chords = []
+    seen_ids = set()
+
+    for chord in array:
+        if id(chord) not in seen_ids:
+            unique_chords.append(chord)
+            seen_ids.add(id(chord))
+
+    for i in range(m//2 - 1):
+        if unique_chords[i+1].chord_idx < unique_chords[i].chord_idx:
+            raise ValueError(f"Invalid ordering of chord idxs: {unique_chords[i]} then {unique_chords[i+1]}")
+
+    
 
     

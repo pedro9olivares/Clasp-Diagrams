@@ -138,6 +138,13 @@ def test_validate_height_raises():
     with pytest.raises(ValueError, match="Invalid height encountered"):
         ClaspDiagram.from_array(arr)
 
+def test_validate_chord_idx_raises2():
+    chord1 = ChordForArray(2, '+', 2)
+    chord2 = ChordForArray(1, '+', 1)
+    arr = [chord1, chord1, chord2, chord2]
+    with pytest.raises(ValueError, match="Invalid ordering of chord idxs:"):
+        ClaspDiagram.from_array(arr)
+
 """
 TODO: test this
 def test_happy_path_from_array():
