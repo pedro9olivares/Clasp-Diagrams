@@ -97,12 +97,17 @@ class ClaspDiagram:
         return cls(array=array)
     
     def derive_array_from_matrix(self):
-        # TODO: Do this derivation (matrix → array)
-        # A validation is added at the end... 
-        raise NotImplementedError("Implement matrix → array conversion.")
+        from clasp_diagrams.transformations import transform_matrix_to_array
+        from clasp_diagrams.validators import validate_clasp_array
+
+        array = transform_matrix_to_array(self.matrix) # O(n) time, O(n) space
+        validate_clasp_array(array) # O(m) time, O(m) space
+
+        return array
+        
     
     def derive_matrix_from_array(self):
-        # TODO: Do this derivation (array → matrix)
+        # TODO: (2) Do this derivation (array → matrix)
         # A validation is added at the end...
         raise NotImplementedError("Implement array → matrix conversion.")
     
