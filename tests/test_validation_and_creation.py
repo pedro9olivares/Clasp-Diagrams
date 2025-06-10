@@ -44,7 +44,7 @@ def test_non_unique_heights_raises_value_error():
         ChordForMatrix(0, 1, '+', 1),
         ChordForMatrix(2, 3, '-', 5)
     )
-    with pytest.raises(ValueError, match=r"The heights are invalid"):
+    with pytest.raises(ValueError, match="The heights are invalid"):
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
 # --- Sign validation ---
@@ -52,7 +52,7 @@ def test_invalid_sign_raises_value_error():
     bad_matrix = (
         ChordForMatrix(0, 1, 'x', 1),
     )
-    with pytest.raises(ValueError, match=r"Invalid sign encountered in"):
+    with pytest.raises(ValueError, match="Invalid sign encountered in"):
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
 # --- End point validation ---
@@ -60,7 +60,7 @@ def test_invalid_end_point_raises_value_error():
     bad_matrix = (
         ChordForMatrix(1, 1, '+', 1),
     )
-    with pytest.raises(ValueError, match=r"Invalid start and endpoint in"):
+    with pytest.raises(ValueError, match="Invalid start and endpoint in"):
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
 # --- Start point order validation ---
@@ -69,7 +69,7 @@ def test_start_points_not_strictly_increasing_raises_value_error():
         ChordForMatrix(1, 2, '-', 2),
         ChordForMatrix(0, 3, '+', 1),
     )
-    with pytest.raises(ValueError, match=r"Invalid order of the start points:"):
+    with pytest.raises(ValueError, match="Invalid order of the start points:"):
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
 # --- Start and end points in range [0, 2n-1] validation ---
@@ -78,7 +78,7 @@ def test_invalid_points_raises_value_error():
         ChordForMatrix(0, 1, '+', 1),
         ChordForMatrix(4, 5, '-', 2)
     )
-    with pytest.raises(ValueError, match=r"Invalid start/end points"):
+    with pytest.raises(ValueError, match="Invalid start/end points"):
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
 """
