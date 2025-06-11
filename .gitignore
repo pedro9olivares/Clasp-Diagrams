@@ -13,4 +13,9 @@ __pycache__/
 # Examples (TODO: polish and eventually publish)
 examples/
 
+# Covergae
+.coverage
+htmlcov/
+
+
 
