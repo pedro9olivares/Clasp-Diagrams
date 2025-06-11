@@ -162,8 +162,8 @@ def test_clasp_diagram_from_array_is_hashable(n):
 # TODO: =============== Random creation validation ===============
 @given(st.integers(min_value=0, max_value=500))
 def test_random_valid_matrix(n):
-    matrix = random_valid_matrix(n)
+    random_valid_matrix(n)
 
 @given(st.integers(min_value=0, max_value=500))
 def test_random_valid_array(n):
-    array = random_valid_array(n)
+    random_valid_array(n)
