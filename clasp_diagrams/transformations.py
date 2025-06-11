@@ -12,6 +12,10 @@ def transform_matrix_to_array(matrix: tuple[ChordForMatrix]) -> list[ChordForArr
     """
     # Create the array
     n = len(matrix)
+
+    if n == 0:
+        return []
+
     array = [None] * (2 * n)
 
     # Create the chords for the array and fill it.
@@ -35,6 +39,9 @@ def transform_array_to_matrix(array: list[ChordForArray]) -> tuple[ChordForMatri
     """
     m = len(array)
     n = m // 2
+
+    if m == 0:
+        return ()
 
     # First, extract all chord info into a dictionary
     chords_dict = defaultdict(list)
