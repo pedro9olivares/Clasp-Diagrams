@@ -1,16 +1,7 @@
 import pytest
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray, ClaspDiagram
-
-def make_valid_matrix(n):
-    return tuple(
-        ChordForMatrix(
-            start_point=2*i,
-            end_point=2*i + 1,
-            sign='+' if i % 2 == 0 else '-',
-            height=i+1,
-        )
-        for i in range(n)
-    )
+from clasp_diagrams.generators import random_valid_matrix, random_valid_array
+from hypothesis import given, strategies as st
 
 # =============== chord hashability validation ===============
 def test_chord_for_matrix_is_hashable():
@@ -81,14 +72,14 @@ def test_invalid_points_raises_value_error():
     with pytest.raises(ValueError, match="Invalid start/end points"):
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
-"""
-TODO: test this
-# --- Happy path ---
-def test_happy_path_from_matrix():
-    matrix = make_valid_matrix(4)
+
+# --- Happy path, as of now max_chords are 50 (max_value) ---
+@given(st.integers(min_value=0, max_value=50))
+def test_happy_path_from_matrix(n):
+    matrix = random_valid_matrix(n)
     clasp = ClaspDiagram.from_matrix(matrix=matrix)
     assert clasp.matrix == matrix
- """
+
 
 # =============== creation via array validation ===============
 # --- Creation validation ---
@@ -145,17 +136,27 @@ def test_validate_chord_idx_raises2():
     with pytest.raises(ValueError, match="Invalid ordering of chord idxs:"):
         ClaspDiagram.from_array(arr)
 
-"""
-TODO: test this
-def test_happy_path_from_array():
-    chord1 = make_chord(sign='+', chord_idx=1, height=1)
-    chord2 = make_chord(sign='-', chord_idx=2, height=2)
-    arr = [chord1, chord1, chord2, chord2]
-    # Should not raise
-    validate_clasp_array(arr)
-"""
 
-# TODO: =============== ClaspDiagram hashability validation ===============
+# --- Happy path, as of now max_chords are 50 (max_value) ---
+@given(st.integers(min_value=0, max_value=50))
+def test_happy_path_from_array(n):
+    array = random_valid_array(n)
+    clasp = ClaspDiagram.from_array(array=array)
+    assert clasp.array == array
 
+# =============== ClaspDiagram hashability validation ===============
+@given(st.integers(min_value=0, max_value=50))
+def test_clasp_diagram_from_matrix_is_hashable(n):
+    matrix = random_valid_matrix(n)
+    clasp = ClaspDiagram.from_matrix(matrix=matrix)
+    clasp_set = {clasp}
+    assert clasp in clasp_set
+
+@given(st.integers(min_value=0, max_value=50))
+def test_clasp_diagram_from_array_is_hashable(n):
+    array = random_valid_array(n)
+    clasp = ClaspDiagram.from_array(array=array)
+    clasp_set = {clasp}
+    assert clasp in clasp_set
 
 # TODO: =============== Random creation validation =============== (with hypothesis)
