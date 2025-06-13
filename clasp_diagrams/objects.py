@@ -58,12 +58,13 @@ class ClaspDiagram:
         elif matrix is None:
             self.matrix = self.derive_matrix_from_array()
 
-        # TODO: (Postpone) generate these attributes
-        self.e_matrix = None
-        self.l_matrix = None
-        self.le_matrix = None
-        self.sd_matrix = None
-        self.alexander = None
+        import symbolics
+        self.e_matrix = symbolics.get_e_matrix(clasp_matrix=self.matrix)
+        self.l_matrix = symbolics.get_l_matrix(clasp_matrix=self.matrix)
+        self.le_matrix = symbolics.get_le_matrix(e_matrix=self.e_matrix,
+                                                 l_matrix=self.l_matrix)
+        self.sd_matrix = symbolics.get_sd_matrix(le_matrix=self.le_matrix)
+        self.alexander = symbolics.get_alexander_polynomial(sd_matrix=self.sd_matrix)
 
         if calculate_word:
             self.clasp_word = self.generate_clasp_word()
