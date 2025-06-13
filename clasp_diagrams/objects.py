@@ -58,7 +58,7 @@ class ClaspDiagram:
         elif matrix is None:
             self.matrix = self.derive_matrix_from_array()
 
-        import symbolics
+        from . import symbolics
         self.e_matrix = symbolics.get_e_matrix(clasp_matrix=self.matrix)
         self.l_matrix = symbolics.get_l_matrix(clasp_matrix=self.matrix)
         self.le_matrix = symbolics.get_le_matrix(e_matrix=self.e_matrix,
