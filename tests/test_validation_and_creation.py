@@ -75,7 +75,7 @@ def test_invalid_points_raises_value_error():
 
 # --- Happy path, as of now max_chords are 50 (max_value) ---
 @given(st.integers(min_value=0, max_value=50))
-def test_happy_path_from_matrix(n):
+def test_creation_from_matrix(n):
     matrix = random_valid_matrix(n)
     clasp = ClaspDiagram.from_matrix(matrix=matrix)
     assert clasp.matrix == matrix
@@ -139,7 +139,7 @@ def test_validate_chord_idx_raises2():
 
 # --- Happy path, as of now max_chords are 50 (max_value) ---
 @given(st.integers(min_value=0, max_value=50))
-def test_happy_path_from_array(n):
+def test_creation_from_array(n):
     array = random_valid_array(n)
     clasp = ClaspDiagram.from_array(array=array)
     assert clasp.array == array
