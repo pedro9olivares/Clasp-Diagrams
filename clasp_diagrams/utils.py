@@ -1,4 +1,5 @@
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray
+from intervaltree import IntervalTree
 
 def matrix_chords_intersect(chord1: ChordForMatrix, chord2: ChordForMatrix) -> bool:
     """
@@ -16,3 +17,19 @@ def matrix_chords_intersect(chord1: ChordForMatrix, chord2: ChordForMatrix) -> b
 
 def array_chords_intersect(array: list[ChordForArray], chord1: ChordForArray, chord2: ChordForArray) -> bool:
     raise NotImplementedError("This method has O(n) complexity. Use instead matrix_chords_intersect.")
+
+
+def get_interval_tree(clasp_matrix: tuple[ChordForMatrix])-> IntervalTree:
+    """
+    Constructs an interval tree where each chord is represented as [start_point, end_point).
+    The tree allows efficient queries of overlapping chords.
+
+    Time complexity: O(nlogn)
+    Space complexity: O(n)
+    """
+    tree = IntervalTree()
+    for chord in clasp_matrix:
+        # Insert interval [start, end) -> chord
+        # We use +1 because IntervalTree treats [start, end)
+        tree[chord.start_point : chord.end_point + 1] = chord
+    return tree
