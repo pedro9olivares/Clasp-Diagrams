@@ -59,11 +59,11 @@ def test_get_alexander_polynomial():
                                               ChordForMatrix(1, 4, '+', 2),
                                               ChordForMatrix(2, 5, '+', 1)))
     cd_5_2 = ClaspDiagram.from_matrix(matrix=(ChordForMatrix(0, 3, '+', 3),
-                                              ChordForMatrix(1, 5, '+', 1),
-                                              ChordForMatrix(2, 4, '+', 2)))
-    cd_6_1 = ClaspDiagram.from_matrix(matrix=(ChordForMatrix(0, 3, '-', 3),
                                               ChordForMatrix(1, 5, '+', 2),
                                               ChordForMatrix(2, 4, '+', 1)))
+    cd_6_1 = ClaspDiagram.from_matrix(matrix=(ChordForMatrix(0, 3, '-', 3),
+                                              ChordForMatrix(1, 5, '+', 1),
+                                              ChordForMatrix(2, 4, '+', 2)))
     cd_6_2 = ClaspDiagram.from_matrix(matrix=(ChordForMatrix(0, 3, '-', 3),
                                               ChordForMatrix(1, 4, '+', 2),
                                               ChordForMatrix(2, 5, '+', 1)))
