@@ -48,7 +48,7 @@ class ClaspDiagram:
             The Alexander polynomial of the associated knot.
     """
 
-    def __init__(self, *, matrix=None, array=None, calculate_word=False):
+    def __init__(self, *, matrix=None, array=None, calculate_symbolics=True, calculate_word=False):
         if (matrix is None) == (array is None):
             raise ValueError("Exactly one of `matrix` or `array` must be provided.")
     
@@ -60,13 +60,14 @@ class ClaspDiagram:
         elif matrix is None:
             self.matrix = self.derive_matrix_from_array()
 
-        from . import symbolics
-        self.e_matrix = symbolics.get_e_matrix(clasp_matrix=self.matrix)
-        self.l_matrix = symbolics.get_l_matrix(clasp_matrix=self.matrix)
-        self.le_matrix = symbolics.get_le_matrix(e_matrix=self.e_matrix,
-                                                 l_matrix=self.l_matrix)
-        self.sd_matrix = symbolics.get_sd_matrix(le_matrix=self.le_matrix)
-        self.alexander = symbolics.get_alexander_polynomial(sd_matrix=self.sd_matrix)
+        if calculate_symbolics:
+            from . import symbolics
+            self.e_matrix = symbolics.get_e_matrix(clasp_matrix=self.matrix)
+            self.l_matrix = symbolics.get_l_matrix(clasp_matrix=self.matrix)
+            self.le_matrix = symbolics.get_le_matrix(e_matrix=self.e_matrix,
+                                                    l_matrix=self.l_matrix)
+            self.sd_matrix = symbolics.get_sd_matrix(le_matrix=self.le_matrix)
+            self.alexander = symbolics.get_alexander_polynomial(sd_matrix=self.sd_matrix)
 
         if calculate_word:
             self.clasp_word = self.generate_clasp_word()
