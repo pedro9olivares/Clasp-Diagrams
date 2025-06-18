@@ -1,5 +1,7 @@
 from pydantic.dataclasses import dataclass
 
+# TODO: (Eventually) add mirrors!
+
 # Represents a chord with start/end points and properties for matrix computations.
 @dataclass(frozen=True)
 class ChordForMatrix:
