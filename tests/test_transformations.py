@@ -11,7 +11,6 @@ def test_transform_matrix_to_array_produces_valid_array(n):
     Generates a valid matrix of n ChordForMatrix instances and verifies that the
     transform_matrix_to_array function produces a valid array.
     """
-    print(f"Testing with n={n}")
 
     matrix = random_valid_matrix(n)
 
@@ -33,7 +32,6 @@ def test_transform_array_to_matrix_produces_valid_matrix(n):
     Generates a valid array of n ChordForArray instances and verifies that the
     transform_array_to_matrix function produces a valid matrix.
     """
-    print(f"Testing with n={n}")
     
     array = random_valid_array(n)
 
