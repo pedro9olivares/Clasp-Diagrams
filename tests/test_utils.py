@@ -63,3 +63,5 @@ def test_matrix_chords_intersect_property(sp1, ep1, sp2, ep2):
         f"Failed on chords: c1=({c1.start_point},{c1.end_point}) "
         f"c2=({c2.start_point},{c2.end_point}); expected={expected}, actual={actual}"
     )
+
+# =============== Interval tree testing (skipped, not using interval tree in this version) ===============
