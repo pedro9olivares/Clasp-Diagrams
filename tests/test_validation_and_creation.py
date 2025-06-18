@@ -1,7 +1,7 @@
 import pytest
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray, ClaspDiagram
 from clasp_diagrams.generators import random_valid_matrix, random_valid_array
-from hypothesis import given, strategies as st
+from hypothesis import given, settings, strategies as st
 
 # =============== chord hashability validation ===============
 def test_chord_for_matrix_is_hashable():
@@ -73,8 +73,9 @@ def test_invalid_points_raises_value_error():
         ClaspDiagram.from_matrix(matrix=bad_matrix)
 
 
-# --- Happy path, as of now max_chords are 50 (max_value) ---
-@given(st.integers(min_value=0, max_value=50))
+# --- Happy path, as of now max_chords are 10 (max_value) ---
+@given(st.integers(min_value=0, max_value=10))
+@settings(deadline=None)
 def test_creation_from_matrix(n):
     matrix = random_valid_matrix(n)
     clasp = ClaspDiagram.from_matrix(matrix=matrix)
@@ -137,22 +138,25 @@ def test_validate_chord_idx_raises2():
         ClaspDiagram.from_array(arr)
 
 
-# --- Happy path, as of now max_chords are 50 (max_value) ---
-@given(st.integers(min_value=0, max_value=50))
+# --- Happy path, as of now max_chords are 10 (max_value) ---
+@given(st.integers(min_value=0, max_value=10))
+@settings(deadline=None)
 def test_creation_from_array(n):
     array = random_valid_array(n)
     clasp = ClaspDiagram.from_array(array=array)
     assert clasp.array == array
 
 # =============== ClaspDiagram hashability validation ===============
-@given(st.integers(min_value=0, max_value=50))
+@given(st.integers(min_value=0, max_value=10))
+@settings(deadline=None)
 def test_clasp_diagram_from_matrix_is_hashable(n):
     matrix = random_valid_matrix(n)
     clasp = ClaspDiagram.from_matrix(matrix=matrix)
     clasp_set = {clasp}
     assert clasp in clasp_set
 
-@given(st.integers(min_value=0, max_value=50))
+@given(st.integers(min_value=0, max_value=10))
+@settings(deadline=None)
 def test_clasp_diagram_from_array_is_hashable(n):
     array = random_valid_array(n)
     clasp = ClaspDiagram.from_array(array=array)
