@@ -18,6 +18,20 @@ def matrix_chords_intersect(chord1: ChordForMatrix, chord2: ChordForMatrix) -> b
 def array_chords_intersect(array: list[ChordForArray], chord1: ChordForArray, chord2: ChordForArray) -> bool:
     raise NotImplementedError("This method has O(n) complexity. Use instead matrix_chords_intersect.")
 
+def consecutive_heights(chord1: ChordForMatrix, chord2: ChordForMatrix, n: int) -> bool:
+    """
+    Checks if two chords have consecutive heights, modulo n.
+
+    Time complexity: O(1)
+    Space complexity: O(1)
+    """
+    if n < 2:
+        raise ValueError(f"Invalid n={n} for consecutive_heights check.") 
+
+    h1 = chord1.height
+    h2 = chord2.height
+
+    return (h1 - h2) % n in (1, n-1)
 
 def get_interval_tree(clasp_matrix: tuple[ChordForMatrix])-> IntervalTree:
     """

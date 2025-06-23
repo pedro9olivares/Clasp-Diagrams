@@ -1,7 +1,8 @@
-from clasp_diagrams.utils import matrix_chords_intersect
+from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights
 from clasp_diagrams.objects import ChordForMatrix
 from hypothesis import given
 import hypothesis.strategies as st
+import pytest
 
 # =============== chords intersect? ===============
 # --- Example testing ---
@@ -63,5 +64,38 @@ def test_matrix_chords_intersect_property(sp1, ep1, sp2, ep2):
         f"Failed on chords: c1=({c1.start_point},{c1.end_point}) "
         f"c2=({c2.start_point},{c2.end_point}); expected={expected}, actual={actual}"
     )
+
+# =============== consecutive height checks ===============
+def test_linear_consecutive_heights():
+    n = 2
+    c1 = ChordForMatrix(0, 1, '+', 1)
+    c2 = ChordForMatrix(2, 3, '-', 2)
+    assert consecutive_heights(c1, c2, n)
+    assert consecutive_heights(c2, c1, n)
+
+def test_wraparound_consecutive_heights():
+    n = 5
+    c1 = ChordForMatrix(0, 1, '+', 1)
+    c2 = ChordForMatrix(2, 3, '-', 2)
+    c3 = ChordForMatrix(4, 5, '+', 3)
+    c4 = ChordForMatrix(6, 7, '-', 4)
+    c5 = ChordForMatrix(8, 9, '+', 5)
+    assert consecutive_heights(c1, c5, n)
+    assert consecutive_heights(c5, c1, n)
+
+def test_non_consecutive_heights():
+    n = 5
+    c1 = ChordForMatrix(0, 1, '+', 1)
+    c2 = ChordForMatrix(2, 3, '-', 2)
+    c3 = ChordForMatrix(4, 5, '+', 3)
+    c4 = ChordForMatrix(6, 7, '-', 4)
+    c5 = ChordForMatrix(8, 9, '+', 5)
+    assert not consecutive_heights(c1, c4, 5)
+
+def test_invalid_n_negative():
+    c1 = ChordForMatrix(0, 1, '+', 1)
+    c2 = ChordForMatrix(2, 3, '-', 2)
+    with pytest.raises(ValueError):
+        consecutive_heights(c1, c2, -5)
 
 # =============== Interval tree testing (skipped, not using interval tree in this version) ===============
