@@ -47,3 +47,7 @@ def get_interval_tree(clasp_matrix: tuple[ChordForMatrix])-> IntervalTree:
         # We use +1 because IntervalTree treats [start, end)
         tree[chord.start_point : chord.end_point + 1] = chord
     return tree
+
+class ImplementationError(Exception):
+    """Raised when some implementation of an algorithm is WRONG!"""
+    pass
