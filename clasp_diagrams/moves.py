@@ -91,7 +91,7 @@ def exchange_heights(clasp: ClaspDiagram, *, i, j) -> ClaspDiagram:
     else:
         raise ImplementationError("Move A failed to produce an isotopic clasp.")
 
-# TODO: ==================== move B and -B: cyclic_height_shift ====================
+# ==================== move B and -B: cyclic_height_shift ====================
 def cyclic_height_shift(clasp: ClaspDiagram) -> ClaspDiagram:
     """
     Move B: Cyclic height shift (+1 to each chord's height).
@@ -112,13 +112,13 @@ def cyclic_height_shift(clasp: ClaspDiagram) -> ClaspDiagram:
     Time complexity: O(n)
     Space complexity: O(n)
     """
-    n = len(clasp)
+    n = len(clasp.matrix)
 
     new_matrix = []
     for chord in clasp.matrix:
         new_matrix.append(ChordForMatrix(start_point=chord.start_point,
                                          end_point=chord.end_point,
-                                         sign=chord.end_point,
+                                         sign=chord.sign,
                                          height=(chord.height % n) + 1)
                                         )
 
@@ -150,13 +150,13 @@ def inverse_cyclic_height_shift(clasp: ClaspDiagram) -> ClaspDiagram:
     Time complexity: O(n)
     Space complexity: O(n)
     """
-    n = len(clasp)
+    n = len(clasp.matrix)
 
     new_matrix = []
     for chord in clasp.matrix:
         new_matrix.append(ChordForMatrix(start_point=chord.start_point,
                                          end_point=chord.end_point,
-                                         sign=chord.end_point,
+                                         sign=chord.sign,
                                          height=((chord.height - 2) % n) + 1)
                                         )
 
