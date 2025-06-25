@@ -2,7 +2,7 @@ from clasp_diagrams.objects import ChordForMatrix, ClaspDiagram
 from clasp_diagrams.moves import exchange_heights
 from clasp_diagrams.generators import random_valid_matrix
 from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights
-from hypothesis import given, assume, settings, Verbosity, strategies as st
+from hypothesis import given, strategies as st
 import pytest
 import random
 
