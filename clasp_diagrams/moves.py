@@ -1,5 +1,5 @@
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray, ClaspDiagram
-from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights
+from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights, ImplementationError
 
 # ==================== move A: exchange_heights ====================
 def valid_exchange_heights(matrix: ClaspDiagram, i, j, n):
@@ -83,6 +83,12 @@ def exchange_heights(clasp: ClaspDiagram, *, i, j) -> ClaspDiagram:
             new_matrix.append(matrix[k])
 
     new_matrix = tuple(new_matrix)
-    print(new_matrix)
 
-    return ClaspDiagram.from_matrix(matrix=new_matrix)
+    new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
+
+    if clasp.alexander == new_clasp.alexander:
+        return new_clasp
+    else:
+        raise ImplementationError("Move A failed to produce an isotopic clasp.")
+
+# TODO: ==================== move B: ====================
