@@ -1,5 +1,5 @@
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray, ClaspDiagram
-from utils import matrix_chords_intersect, consecutive_heights
+from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights
 
 # ==================== move A: exchange_heights ====================
 def valid_exchange_heights(matrix: ClaspDiagram, i, j, n):
