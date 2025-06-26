@@ -1,3 +1,4 @@
+from __future__ import annotations
 from pydantic.dataclasses import dataclass
 
 # TODO: (Eventually) add mirrors!
@@ -164,3 +165,39 @@ class ClaspDiagram:
         """
         return hash(self.matrix)
          
+    def move(self, *, move_num, i, j) -> ClaspDiagram:
+        """
+        Applies a move to the clasp diagram, delegated by move number.
+
+        Usage:
+            - Move A (and its inverse -A): use move_num=1; requires arguments i and j.
+            - Move B: use move_num=2; ignores i and j.
+            - Move -B: use move_num=-2; ignores i and j.
+
+        Notes:
+            If a move does not require `i` or `j`, those arguments can be provided arbitrarily.
+
+        Parameters
+        ----------
+        move_num : int
+            The move identifier.
+        i, j : int
+            Indices of chords involved in the move. May not be required by the move.
+
+        Returns
+        -------
+        ClaspDiagram
+            The result of applying the move.
+        """
+        import clasp_diagrams.moves as moves
+        num_to_move = {1: moves.exchange_heights,
+                       2: moves.cyclic_height_shift,
+                      -2: moves.inverse_cyclic_height_shift}
+        
+        try:
+            move = num_to_move[move_num]
+        except KeyError:
+            allowed = ', '.join(f"{k}: {v.__name__}" for k, v in num_to_move.items())
+            raise ValueError(f"Invalid move_num={move_num}. Must be one of: {allowed}")
+        
+        return move(clasp=self, i=i, j=j)
