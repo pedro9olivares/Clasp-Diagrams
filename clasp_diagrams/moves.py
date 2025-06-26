@@ -1,5 +1,6 @@
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray, ClaspDiagram
 from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights, ImplementationError
+import numpy as np
 
 # ==================== move A: exchange_heights ====================
 def valid_exchange_heights(matrix: tuple[ChordForMatrix], i, j, n):
@@ -168,3 +169,83 @@ def inverse_cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> Clasp
         return new_clasp
     else:
         raise ImplementationError("Move -B failed to produce an isotopic clasp.")
+
+# ==================== move C1: erase isolated chord ====================
+def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
+    """
+    Checks that the chosen chord and clasp diagram are suitable for applying move C1.
+    """
+    matrix = clasp.matrix
+    n = len(matrix)
+
+    # Empty clasp diagram check
+    if n < 1:
+        raise ValueError("Clasp diagram needs to have at least one chord.")
+    
+    # Invalid index chosen check
+    if not 1 <= i <= n:
+        raise ValueError(f"Invalid chord index chosen. Must be between 1 and {n}.")
+    
+    # Non-isolated chord check: check if i-th row (in 1-indexing) and column of L-matrix is all zeros.
+    row = clasp.l_matrix[i - 1, :]  # Row vector
+    col = clasp.l_matrix[:, i - 1]  # Column vector
+
+    if np.any(row != 0) or np.any(col != 0):
+        raise ValueError(f"{matrix[i-1]} with chord index {i} is not isolated.")
+    
+    return matrix[i-1]
+
+def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> ClaspDiagram:
+    """
+    Move C1: Erase an isolated chord.
+
+    Parameters
+    ----------
+    clasp : ClaspDiagram
+        The diagram to apply the move to.
+    i : int
+        Index of the chord to erase.
+    
+    Returns
+    -------
+    tuple
+        - ClaspDiagram: New diagram with move applied.
+
+        - int: The start- or end-point that -C1 needs to revert this move (given by chord_to_erase.start_point - 1).
+
+    n is the number of chords in the clasp diagram.
+
+    Time complexity: O(n)
+    Space complexity: O(n)
+    """
+    # If the following function doesn't raise any errors, the move can be performed.
+    chord_to_erase = valid_erase_isolated_chord(clasp, i=i)
+
+    height_to_erase = chord_to_erase.height
+    array = clasp.array
+    new_array = []
+
+    # The following loop removes the chord and adjust indices/heights of the remaining chords
+    for chord in array:
+        curr_idx = chord.chord_idx
+        curr_height = chord.height
+        # Append only if chord_idx != i
+        if curr_idx != i:
+            # Decrease the index if greater than i
+            new_idx = curr_idx - 1 if curr_idx > i else curr_idx
+            # Decrease the height if greater than the erased chord's height
+            new_height = curr_height - 1 if curr_height > height_to_erase else curr_height
+            new_array.append(ChordForArray(chord_idx=new_idx,
+                                           sign=chord.sign,
+                                           height=new_height))
+
+    new_clasp = ClaspDiagram.from_array(array=new_array)
+
+    if clasp.alexander == new_clasp.alexander:
+        return new_clasp, chord_to_erase.start_point - 1
+    else:
+        raise ImplementationError("Move C1 failed to produce an isotopic clasp.")
+
+# ==================== TODO: (continue here) move -C1: add isolated chord (by starting point!) ====================
+
+
