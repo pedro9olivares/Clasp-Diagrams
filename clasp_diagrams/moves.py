@@ -31,7 +31,7 @@ def valid_exchange_heights(matrix: ClaspDiagram, i, j, n):
     
     return chord1, chord2
 
-def exchange_heights(*, clasp: ClaspDiagram, i, j) -> ClaspDiagram:
+def exchange_heights(clasp: ClaspDiagram, *, i, j) -> ClaspDiagram:
     """
     Move A: Exchange the heights of two non-intersecting chords with consecutive heights.
 
@@ -92,7 +92,7 @@ def exchange_heights(*, clasp: ClaspDiagram, i, j) -> ClaspDiagram:
         raise ImplementationError("Move A failed to produce an isotopic clasp.")
 
 # ==================== move B and -B: cyclic_height_shift ====================
-def cyclic_height_shift(*, clasp: ClaspDiagram, i=None, j=None) -> ClaspDiagram:
+def cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> ClaspDiagram:
     """
     Move B: Cyclic height shift (+1 to each chord's height).
     This move can always be applied.
@@ -131,7 +131,7 @@ def cyclic_height_shift(*, clasp: ClaspDiagram, i=None, j=None) -> ClaspDiagram:
     else:
         raise ImplementationError("Move B failed to produce an isotopic clasp.")
     
-def inverse_cyclic_height_shift(*, clasp: ClaspDiagram, i=None, j=None) -> ClaspDiagram:
+def inverse_cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> ClaspDiagram:
     """
     Move -B: Inverse cyclic height shift (-1 to each chord's height).
     This move can always be applied.
