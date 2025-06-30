@@ -1,6 +1,7 @@
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray, ClaspDiagram
 from clasp_diagrams.utils import matrix_chords_intersect, consecutive_heights, ImplementationError
 import numpy as np
+from dataclasses import astuple
 
 # ==================== move A: exchange_heights ====================
 def valid_exchange_heights(matrix: tuple[ChordForMatrix], i, j, n):
@@ -195,7 +196,7 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     
     return matrix[i-1]
 
-def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> ClaspDiagram:
+def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagram, ChordForMatrix]:
     """
     Move C1: Erase an isolated chord.
 
@@ -211,7 +212,7 @@ def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> ClaspDiagram:
     tuple
         - ClaspDiagram: New diagram with move applied.
 
-        - int: The start- or end-point that -C1 needs to revert this move (given by chord_to_erase.start_point - 1).
+        - ChordForMatrix: The erased chord.
 
     n is the number of chords in the clasp diagram.
 
@@ -242,10 +243,87 @@ def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> ClaspDiagram:
     new_clasp = ClaspDiagram.from_array(array=new_array)
 
     if clasp.alexander == new_clasp.alexander:
-        return new_clasp, chord_to_erase.start_point - 1
+        return new_clasp, chord_to_erase
     else:
         raise ImplementationError("Move C1 failed to produce an isotopic clasp.")
 
-# ==================== TODO: (continue here) move -C1: add isolated chord (by starting point!) ====================
+# ==================== move -C1: add isolated chord (after a starting point) ====================
+def valid_add_isolated_chord(n, after_point, sign, height):
+    """
+    Checks if the specified chord fits in the clasp diagram.
+    """
+    valid_points = list(range(0, 2*n))
+    if after_point not in valid_points:
+        raise ValueError(f"Invalid strating/ending point chosen. Must be in {valid_points}.")
+    
+    if sign not in ['-', '+']:
+        raise ValueError(f"Invalid sign chosen ({sign}). Must be '-' or '+'.")
+    
+    valid_heights = list(range(1, n+2))
+    if height not in valid_heights:
+        raise ValueError(f"Invalid height chosen. Must be in {valid_heights}")
+    
+def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height) -> ClaspDiagram:
+    """
+    Move -C1: Add an isolated chord after the specified starting/ending point.
 
+    Parameters
+    ----------
+    clasp : ClaspDiagram
+        The diagram to apply the move to.
+    after_point : int
+        Starting/ending point after which to add the new isolated chord.
+    sign : str
+        Sign of the new chord. Must be '+' or '-'
+    height : int
+        Height of the new chord.
+    
+    Returns
+    -------
+    ClaspDiagram
+        New diagram with move applied.
+
+    n is the number of chords in the clasp diagram.
+
+    Time complexity: O(n)
+    Space complexity: O(n)
+    """
+    matrix = clasp.matrix
+    n = len(matrix)
+
+    # If the following function doesn't raise any errors, the move can be performed.
+    valid_add_isolated_chord(n=n, after_point=after_point, sign=new_sign, height=new_height)
+    
+    new_matrix = []
+    new_sp = after_point + 1
+    new_ep = after_point + 2
+    new_chord = ChordForMatrix(new_sp, new_ep, new_sign, new_height)
+
+    # Add the new chord after the specified starting/ending point.
+    # For every other chord:
+    #   - increase the starting/ending points by two if greater or equal to new_sp,
+    #   - increase height by one if greater or equal to new_height.
+    for chord in matrix:
+        sp, ep, sign, height = astuple(chord)
+        if sp >= new_sp:
+            sp += 2
+        if ep >= new_sp:
+            ep += 2
+        if height >= new_height:
+            height += 1
+        new_matrix.append(ChordForMatrix(sp, ep, sign, height)) # Adding the modified chord
+
+        if sp == after_point or ep == after_point:
+            new_matrix.append(new_chord)
+
+    new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
+
+    if clasp.alexander == new_clasp.alexander:
+        return new_clasp
+    else:
+        raise ImplementationError("Move -C1 failed to produce an isotopic clasp.")
+
+
+
+        
 
