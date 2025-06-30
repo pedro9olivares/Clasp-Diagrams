@@ -12,7 +12,7 @@ def generate_invalid_indices(n: int):
     """
     Generates random indices i, j outside the range [1, ..., n].
 
-    Rejection sampling is used since valid range is normally small (n <= 10 in larger clasps)
+    TODO: (revisit) Rejection sampling is used since valid range is normally small (n <= 10 in larger clasps)
     """
     while True:
         i = random.randint(-100, 100)
