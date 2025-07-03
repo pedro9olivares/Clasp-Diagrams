@@ -87,7 +87,7 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
         ]
     
     if invalid_chords:
-        raise ValueError(f"Some ChordForArray objects do not appear exactly twice (they might not the be the same object in memory): {invalid_chords}")
+        raise ValueError(f"Some ChordForArray objects do not appear exactly twice (they might not the be the same object in memory). These are: {invalid_chords}")
 
     # sign validation: signs must be either '+' or '-'
     # id validation: check that all chord_idxs are in the range [1, m//2],

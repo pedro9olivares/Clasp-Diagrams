@@ -225,8 +225,9 @@ def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagra
     height_to_erase = chord_to_erase.height
     array = clasp.array
     new_array = []
+    chord_cache = {} # A cache for object interning of the form {chord: chord} (same key and value!)
 
-    # The following loop removes the chord and adjust indices/heights of the remaining chords
+    # The following loop removes the chord and adjusts indices/heights of the remaining chords
     for chord in array:
         curr_idx = chord.chord_idx
         curr_height = chord.height
@@ -236,9 +237,13 @@ def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagra
             new_idx = curr_idx - 1 if curr_idx > i else curr_idx
             # Decrease the height if greater than the erased chord's height
             new_height = curr_height - 1 if curr_height > height_to_erase else curr_height
-            new_array.append(ChordForArray(chord_idx=new_idx,
-                                           sign=chord.sign,
-                                           height=new_height))
+            new_chord = ChordForArray(chord_idx=new_idx, sign=chord.sign, height=new_height)
+            # Object interning: let's reuse created chords:
+            if new_chord not in chord_cache:
+                new_array.append(new_chord)
+                chord_cache[new_chord] = new_chord
+            else:
+                new_array.append(chord_cache[new_chord])
 
     new_clasp = ClaspDiagram.from_array(array=new_array)
 
@@ -254,7 +259,7 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     """
     valid_points = list(range(0, 2*n))
     if after_point not in valid_points:
-        raise ValueError(f"Invalid strating/ending point chosen. Must be in {valid_points}.")
+        raise ValueError(f"Invalid starting/ending point chosen. Must be in {valid_points}.")
     
     if sign not in ['-', '+']:
         raise ValueError(f"Invalid sign chosen ({sign}). Must be '-' or '+'.")
