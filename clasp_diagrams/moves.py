@@ -88,7 +88,7 @@ def exchange_heights(clasp: ClaspDiagram, *, i, j) -> ClaspDiagram:
 
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
-    if clasp.alexander == new_clasp.alexander:
+    if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
         return new_clasp
     else:
         raise ImplementationError("Move A failed to produce an isotopic clasp.")
@@ -128,7 +128,7 @@ def cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> ClaspDiagram:
     new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
-    if clasp.alexander == new_clasp.alexander:
+    if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
         return new_clasp
     else:
         raise ImplementationError("Move B failed to produce an isotopic clasp.")
@@ -166,7 +166,7 @@ def inverse_cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> Clasp
     new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
-    if clasp.alexander == new_clasp.alexander:
+    if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
         return new_clasp
     else:
         raise ImplementationError("Move -B failed to produce an isotopic clasp.")
@@ -194,7 +194,7 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     if np.any(row != 0) or np.any(col != 0):
         raise ValueError(f"{matrix[i-1]} with chord index {i} is not isolated.")
     
-    return matrix[i-1]
+    return matrix[i - 1]
 
 def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagram, ChordForMatrix]:
     """
@@ -242,10 +242,10 @@ def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagra
 
     new_clasp = ClaspDiagram.from_array(array=new_array)
 
-    if clasp.alexander == new_clasp.alexander:
+    if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
         return new_clasp, chord_to_erase
     else:
-        raise ImplementationError("Move C1 failed to produce an isotopic clasp.")
+        raise ImplementationError(f"Move C1 failed to produce an isotopic clasp: {type(clasp.alexander)} vs {type(new_clasp.alexander)}.")
 
 # ==================== move -C1: add isolated chord (after a starting point) ====================
 def valid_add_isolated_chord(n, after_point, sign, height):
@@ -318,7 +318,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
 
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
-    if clasp.alexander == new_clasp.alexander:
+    if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
         return new_clasp
     else:
         raise ImplementationError("Move -C1 failed to produce an isotopic clasp.")
