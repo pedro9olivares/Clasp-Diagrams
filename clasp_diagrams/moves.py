@@ -321,7 +321,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
         if sp == after_point or ep == after_point:
             new_matrix.append(new_chord)
 
-    new_matrix = tuple(matrix)
+    new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
     if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
