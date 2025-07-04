@@ -185,7 +185,7 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     
     # Invalid index chosen check
     if not 1 <= i <= n:
-        raise ValueError(f"Invalid chord index chosen. Must be between 1 and {n}.")
+        raise ValueError(f"Invalid chord index chosen ({i}). Must be between 1 and {n}.")
     
     # Non-isolated chord check: check if i-th row (in 1-indexing) and column of L-matrix is all zeros.
     row = clasp.l_matrix[i - 1, :]  # Row vector
