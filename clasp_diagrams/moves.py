@@ -259,14 +259,14 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     """
     valid_points = list(range(0, 2*n))
     if after_point not in valid_points:
-        raise ValueError(f"Invalid starting/ending point chosen. Must be in {valid_points}.")
+        raise ValueError(f"Invalid starting/ending point chosen ({after_point}). Must be in {valid_points}.")
     
     if sign not in ['-', '+']:
         raise ValueError(f"Invalid sign chosen ({sign}). Must be '-' or '+'.")
     
     valid_heights = list(range(1, n+2))
     if height not in valid_heights:
-        raise ValueError(f"Invalid height chosen. Must be in {valid_heights}")
+        raise ValueError(f"Invalid height chosen ({height}). Must be in {valid_heights}")
     
 def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height) -> ClaspDiagram:
     """
