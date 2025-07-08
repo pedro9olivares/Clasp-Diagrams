@@ -124,17 +124,30 @@ class ClaspDiagram:
         raise NotImplementedError("Implement generation of clasp word.")
     
     def __repr__(self):
+    #    return (
+    #        f"{self.__class__.__name__}(\n"
+    #        f"  matrix={self.matrix},\n"
+    #        f"  array={self.array},\n"
+    #        f"  clasp_word={self.clasp_word},\n"
+    #        f"  e_matrix={self.e_matrix},\n"
+    #        f"  l_matrix={self.l_matrix},\n"
+    #        f"  le_matrix={self.le_matrix},\n"
+    #        f"  sd_matrix={self.sd_matrix},\n"
+    #        f"  alexander={self.alexander}\n"
+    #        f")")
+        if len(self.matrix) == 0:
+                matrix_str = "[]"
+        else:
+            matrix_str = "\n".join(
+                f"[{chord.start_point}, {chord.end_point}, {chord.sign}, {chord.height}]"
+                for chord in self.matrix
+            )
+
         return (
-            f"{self.__class__.__name__}(\n"
-            f"  matrix={self.matrix},\n"
-            f"  array={self.array},\n"
-            f"  clasp_word={self.clasp_word},\n"
-            f"  e_matrix={self.e_matrix},\n"
-            f"  l_matrix={self.l_matrix},\n"
-            f"  le_matrix={self.le_matrix},\n"
-            f"  sd_matrix={self.sd_matrix},\n"
-            f"  alexander={self.alexander}\n"
-            f")")
+            f"Clasp Diagram object\n"
+            f"{matrix_str}\n"
+            f"Alexander polynomial = {self.alexander}"
+        )
     
     def __str__(self):
         if len(self.matrix) == 0:
