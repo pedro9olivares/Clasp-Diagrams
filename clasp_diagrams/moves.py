@@ -257,7 +257,10 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     """
     Checks if the specified chord fits in the clasp diagram.
     """
-    valid_points = list(range(0, 2*n))
+    if n != 0:
+        valid_points = list(range(0, 2*n))
+    else:
+        valid_points = [-1] # Special case: adding a chord to an unknot (). Add after "point" -1
     if after_point not in valid_points:
         raise ValueError(f"Invalid starting/ending point chosen ({after_point}). Must be in {valid_points}.")
     
@@ -303,7 +306,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
     new_sp = after_point + 1
     new_ep = after_point + 2
     new_chord = ChordForMatrix(new_sp, new_ep, new_sign, new_height)
-
+ 
     # Add the new chord after the specified starting/ending point.
     # For every other chord:
     #   - increase the starting/ending points by two if greater or equal to new_sp,
@@ -320,6 +323,10 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
 
         if sp == after_point or ep == after_point:
             new_matrix.append(new_chord)
+
+    # Special case: adding a chord to an unknot ()
+    if n == 0:
+        new_matrix.append(new_chord)
 
     new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
