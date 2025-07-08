@@ -293,7 +293,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
 
     n is the number of chords in the clasp diagram.
 
-    Time complexity: O(n)
+    Time complexity: O(n) or O(nlogn)
     Space complexity: O(n)
     """
     matrix = clasp.matrix
@@ -328,6 +328,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
     if n == 0:
         new_matrix.append(new_chord)
 
+    new_matrix = sorted(new_matrix, key=lambda x: x.start_point) # Timsort is O(n) for nearly sorted data?
     new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
