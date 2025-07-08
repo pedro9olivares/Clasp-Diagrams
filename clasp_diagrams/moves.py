@@ -197,7 +197,7 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     sp =  matrix[i-1].start_point
     ep = matrix[i-1].end_point
     if ep != sp + 1 and not (sp == 0 and ep == 2*n - 1):
-    #if (sp - ep) % (2*n) != 1:
+    #TODO: (revisit this modular arithmetic) if (sp - ep) % (2*n) != 1:
         raise ValueError(f"{matrix[i-1]} with chord index {i} does not close immediately.")
     
     return matrix[i - 1]
@@ -263,10 +263,7 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     """
     Checks if the specified chord fits in the clasp diagram.
     """
-    if n != 0:
-        valid_points = list(range(0, 2*n))
-    else:
-        valid_points = [-1] # Special case: adding a chord to an unknot (). Add after "point" -1
+    valid_points = list(range(-1, 2*n))
     if after_point not in valid_points:
         raise ValueError(f"Invalid starting/ending point chosen ({after_point}). Must be in {valid_points}.")
     
@@ -279,7 +276,7 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     
 def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height) -> ClaspDiagram:
     """
-    Move -C1: Add an isolated chord after the specified starting/ending point.
+    Move -C1: Add an isolated chord after the specified starting/ending point. Can be optimized! (Remove sorting)
 
     Parameters
     ----------
@@ -299,7 +296,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
 
     n is the number of chords in the clasp diagram.
 
-    Time complexity: O(n) or O(nlogn)
+    Time complexity: O(nlogn)
     Space complexity: O(n)
     """
     matrix = clasp.matrix
@@ -313,7 +310,9 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
     new_ep = after_point + 2
     new_chord = ChordForMatrix(new_sp, new_ep, new_sign, new_height)
  
-    # Add the new chord after the specified starting/ending point.
+    # Add the new chord:
+    new_matrix.append(new_chord)
+
     # For every other chord:
     #   - increase the starting/ending points by two if greater or equal to new_sp,
     #   - increase height by one if greater or equal to new_height.
@@ -327,14 +326,7 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
             height += 1
         new_matrix.append(ChordForMatrix(sp, ep, sign, height)) # Adding the modified chord
 
-        if sp == after_point or ep == after_point:
-            new_matrix.append(new_chord)
-
-    # Special case: adding a chord to an unknot ()
-    if n == 0:
-        new_matrix.append(new_chord)
-
-    new_matrix = sorted(new_matrix, key=lambda x: x.start_point) # Timsort is O(n) for nearly sorted data?
+    new_matrix = sorted(new_matrix, key=lambda x: x.start_point)
     new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
