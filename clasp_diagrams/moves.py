@@ -198,7 +198,7 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     ep = matrix[i-1].end_point
     if ep != sp + 1 and not (sp == 0 and ep == 2*n - 1):
     #TODO: (revisit this modular arithmetic) if (sp - ep) % (2*n) != 1:
-        raise ValueError(f"{matrix[i-1]} with chord index {i} does not close immediately.")
+        raise ValueError(f"{matrix[i-1]} with chord index {i} does not close immediately (n={n}).")
     
     return matrix[i - 1]
 
@@ -274,7 +274,7 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     if height not in valid_heights:
         raise ValueError(f"Invalid height chosen ({height}). Must be in {valid_heights}")
     
-def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height) -> ClaspDiagram:
+def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height, reverse_first_chord=False) -> ClaspDiagram:
     """
     Move -C1: Add an isolated chord after the specified starting/ending point. Can be optimized! (Remove sorting)
 
@@ -308,6 +308,8 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
     new_matrix = []
     new_sp = after_point + 1
     new_ep = after_point + 2
+    if reverse_first_chord: 
+        new_ep = 2*(n+1) - 1
     new_chord = ChordForMatrix(new_sp, new_ep, new_sign, new_height)
  
     # Add the new chord:
