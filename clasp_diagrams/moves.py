@@ -194,6 +194,12 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     if np.any(row != 0) or np.any(col != 0):
         raise ValueError(f"{matrix[i-1]} with chord index {i} is not isolated.")
     
+    sp =  matrix[i-1].start_point
+    ep = matrix[i-1].end_point
+    if ep != sp + 1 and not (sp == 0 and ep == 2*n - 1):
+    #if (sp - ep) % (2*n) != 1:
+        raise ValueError(f"{matrix[i-1]} with chord index {i} does not close immediately.")
+    
     return matrix[i - 1]
 
 def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagram, ChordForMatrix]:
