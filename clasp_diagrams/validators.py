@@ -1,6 +1,10 @@
 from clasp_diagrams.objects import ChordForMatrix, ChordForArray
 from collections import Counter
 
+class ClaspDiagramCreationError(Exception):
+    """Raised when a ClaspDiagram cannot be created from the given input."""
+    pass
+
 def validate_clasp_matrix(matrix: tuple[ChordForMatrix]) -> None:
     """
     Validates the proposed tuple of ChordForMatrix instances.
@@ -12,7 +16,7 @@ def validate_clasp_matrix(matrix: tuple[ChordForMatrix]) -> None:
     """
     # first, None & type checking
     if matrix is None:
-        raise ValueError("matrix argument is None")
+        raise ClaspDiagramCreationError("matrix argument is None")
     if not isinstance(matrix, tuple):
         raise TypeError("matrix argument must be a tuple of ChordForMatrix instances")
     if not all(isinstance(chord, ChordForMatrix) for chord in matrix):
@@ -25,7 +29,7 @@ def validate_clasp_matrix(matrix: tuple[ChordForMatrix]) -> None:
     n = len(matrix)
     heights = [chord.height for chord in matrix] # O(n)
     if set(heights) != set(range(1, n + 1)):
-        raise ValueError(f"The heights are invalid: {heights}")
+        raise ClaspDiagramCreationError(f"The heights are invalid: {heights}")
 
     # sign validation: signs must be either '+' or '-'
     # end_point validation: all end_points must be strictly greater than the starting points
@@ -34,11 +38,11 @@ def validate_clasp_matrix(matrix: tuple[ChordForMatrix]) -> None:
     previous_start_point = -1
     for chord in matrix:
         if chord.sign not in ('+', '-'):
-            raise ValueError(f"Invalid sign encountered in {chord}")
+            raise ClaspDiagramCreationError(f"Invalid sign encountered in {chord}")
         if chord.end_point <= chord.start_point:
-            raise ValueError(f"Invalid start and endpoint in {chord}")
+            raise ClaspDiagramCreationError(f"Invalid start and endpoint in {chord}")
         if chord.start_point <= previous_start_point:
-            raise ValueError(f"Invalid order of the start points: {previous_start_point} and {chord.start_point}")
+            raise ClaspDiagramCreationError(f"Invalid order of the start points: {previous_start_point} and {chord.start_point}")
         else:
             previous_start_point = chord.start_point
 
@@ -51,7 +55,7 @@ def validate_clasp_matrix(matrix: tuple[ChordForMatrix]) -> None:
     actual_points = set(points)
     expected_points = set(range(2 * n))
     if actual_points != expected_points:
-        raise ValueError(f"Invalid start/end points: {actual_points - expected_points} (expected: 0 to {2 * n - 1})")
+        raise ClaspDiagramCreationError(f"Invalid start/end points: {actual_points - expected_points} (expected: 0 to {2 * n - 1})")
 
 def validate_clasp_array(array: list[ChordForArray]) -> None:
     """
@@ -64,13 +68,13 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
     """
     # first, None, type and even list checking
     if array is None:
-        raise ValueError("array argument is None")
+        raise ClaspDiagramCreationError("array argument is None")
     if not isinstance(array, list):
         raise TypeError("array argument must be a list of ChordForArray instances")
     if not all(isinstance(chord, ChordForArray) for chord in array):
         raise TypeError("All elements of the list must be of type ChordForArray")
     if len(array) % 2 != 0:
-        raise ValueError("Array must contain an even number of ChordForArray instances.")
+        raise ClaspDiagramCreationError("Array must contain an even number of ChordForArray instances.")
     
     # content checking follows
     
@@ -87,7 +91,7 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
         ]
     
     if invalid_chords:
-        raise ValueError(f"Some ChordForArray objects do not appear exactly twice (they might not the be the same object in memory). These are: {invalid_chords}")
+        raise ClaspDiagramCreationError(f"Some ChordForArray objects do not appear exactly twice (they might not the be the same object in memory). These are: {invalid_chords}")
 
     # sign validation: signs must be either '+' or '-'
     # id validation: check that all chord_idxs are in the range [1, m//2],
@@ -101,11 +105,11 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
 
     for chord in unique_chords:
         if chord.sign not in ('+', '-'):
-            raise ValueError(f"Invalid sign encountered in {chord}")
+            raise ClaspDiagramCreationError(f"Invalid sign encountered in {chord}")
         if not (1 <= chord.chord_idx <= m//2):
-            raise ValueError(f"Invalid chord_idx encountered in {chord}. Expected in [1, {m//2}]")
+            raise ClaspDiagramCreationError(f"Invalid chord_idx encountered in {chord}. Expected in [1, {m//2}]")
         if not (1 <= chord.height <= m//2):
-            raise ValueError(f"Invalid height encountered in {chord}. Expected in [1, {m//2}]")
+            raise ClaspDiagramCreationError(f"Invalid height encountered in {chord}. Expected in [1, {m//2}]")
         
     # id validation check 2: check that chord ids appear in ascending order
     unique_chords = []
@@ -118,7 +122,7 @@ def validate_clasp_array(array: list[ChordForArray]) -> None:
 
     for i in range(m//2 - 1):
         if unique_chords[i+1].chord_idx < unique_chords[i].chord_idx:
-            raise ValueError(f"Invalid ordering of chord idxs: {unique_chords[i]} then {unique_chords[i+1]}")
+            raise ClaspDiagramCreationError(f"Invalid ordering of chord idxs: {unique_chords[i]} then {unique_chords[i+1]}")
 
     
 
