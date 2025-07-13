@@ -274,7 +274,7 @@ def valid_add_isolated_chord(n, after_point, sign, height):
     if height not in valid_heights:
         raise ValueError(f"Invalid height chosen ({height}). Must be in {valid_heights}")
     
-def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height, reverse_first_chord=False) -> ClaspDiagram:
+def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height, reverse_points=False) -> ClaspDiagram:
     """
     Move -C1: Add an isolated chord after the specified starting/ending point. Can be optimized! (Remove sorting)
 
@@ -288,6 +288,8 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
         Sign of the new chord. Must be '+' or '-'
     height : int
         Height of the new chord.
+    reverse_points: bool
+        If True and after_point is -1, the chord added starts at 0 and ends at 2n - 1
     
     Returns
     -------
@@ -306,10 +308,12 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
     valid_add_isolated_chord(n=n, after_point=after_point, sign=new_sign, height=new_height)
     
     new_matrix = []
-    new_sp = after_point + 1
-    new_ep = after_point + 2
-    if reverse_first_chord: 
+    if reverse_points:
+        new_sp = 0
         new_ep = 2*(n+1) - 1
+    else:
+        new_sp = after_point + 1
+        new_ep = after_point + 2
     new_chord = ChordForMatrix(new_sp, new_ep, new_sign, new_height)
  
     # Add the new chord:
@@ -326,6 +330,9 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
             ep += 2
         if height >= new_height:
             height += 1
+        if reverse_points:
+            sp -= 1
+            ep -= 1
         new_matrix.append(ChordForMatrix(sp, ep, sign, height)) # Adding the modified chord
 
     new_matrix = sorted(new_matrix, key=lambda x: x.start_point)
