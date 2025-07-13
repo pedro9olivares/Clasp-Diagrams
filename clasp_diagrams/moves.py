@@ -293,8 +293,11 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
     
     Returns
     -------
-    ClaspDiagram
-        New diagram with move applied.
+    tuple
+        - ClaspDiagram
+            New diagram with move applied.
+        - int
+            Chord index (1-indexed) of the newly added chord
 
     n is the number of chords in the clasp diagram.
 
@@ -336,11 +339,12 @@ def add_isolated_chord(clasp: ClaspDiagram, *, after_point, new_sign, new_height
         new_matrix.append(ChordForMatrix(sp, ep, sign, height)) # Adding the modified chord
 
     new_matrix = sorted(new_matrix, key=lambda x: x.start_point)
+    chord_idx = new_matrix.index(new_chord) + 1 # Get the chord index of the newly added chord
     new_matrix = tuple(new_matrix)
     new_clasp = ClaspDiagram.from_matrix(matrix=new_matrix)
 
     if clasp.alexander.equals(new_clasp.alexander) or clasp.alexander.equals(-new_clasp.alexander):
-        return new_clasp
+        return new_clasp, chord_idx
     else:
         raise ImplementationError("Move -C1 failed to produce an isotopic clasp.")
 
