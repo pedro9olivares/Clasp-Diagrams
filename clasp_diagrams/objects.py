@@ -191,8 +191,8 @@ class ClaspDiagram:
         - Move C1: use `move_num=3`. Requires keyword argument `i`, the index of the chord to erase.
         - Move -C1: use `move_num=-3`. Requires keyword arguments:
             - `after_point`: int — the point after which to insert the new chord.
-            - `sign`: '+' or '-' — the sign of the new chord.
-            - `height`: int — the height of the new chord.
+            - `new_sign`: '+' or '-' — the sign of the new chord.
+            - `new_height`: int — the height of the new chord.
             - `reverse_points`: bool, optional — whether to use a wrapped point insertion (default: False).
 
         Parameters

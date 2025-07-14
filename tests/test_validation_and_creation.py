@@ -177,13 +177,15 @@ def test_random_valid_array(n):
 def test_move_delegator_raises_error():
     clasp = ClaspDiagram.from_array(array=random_valid_array(3))
     with pytest.raises(ValueError, match="Invalid move_num"):
-        clasp.move(move_num=-99, i=1, j=2)
+        clasp.move(move_num=-99)
 
-def test_move_delegator_on_arbitrary_move():
-    clasp = ClaspDiagram.from_array(array=random_valid_array(3))
+def test_move_delegator():
+    clasp = ClaspDiagram.from_matrix(matrix=(ChordForMatrix(0, 1, '+', 1),
+                                             ChordForMatrix(2, 3, '+', 2)))
 
-    int_clasp = clasp.move(move_num=2, i=None, j=None)
-    final_clasp = int_clasp.move(move_num=-2, i=None, j=None)
-
-    assert clasp == final_clasp
+    clasp.move(move_num=1, i=1, j=2)
+    clasp.move(move_num=2)
+    clasp.move(move_num=-2)
+    clasp.move(move_num=3, i=2)
+    clasp.move(move_num=-3, after_point=1, new_sign='+', new_height=2)
 
