@@ -224,7 +224,7 @@ class ClaspDiagram:
         
         return move(clasp=self, **kwargs)
     
-    def move_help(move_num: int) -> str:
+    def move_help(self, move_num: int) -> str:
         import clasp_diagrams.moves as moves
         MOVES = {
             1: moves.exchange_heights,
