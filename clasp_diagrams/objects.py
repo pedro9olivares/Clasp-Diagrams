@@ -178,24 +178,29 @@ class ClaspDiagram:
         """
         return hash(self.matrix)
          
-    def move(self, *, move_num, i, j) -> ClaspDiagram:
+    def move(self, *, move_num, **kwargs) -> ClaspDiagram:
         """
         Applies a move to the clasp diagram, delegated by move number.
+        Chord indexes are 1-indexed.
+        Start/end points are 0-indexed.
 
         Usage:
-            - Move A (and its inverse -A): use move_num=1; requires arguments i and j.
-            - Move B: use move_num=2; ignores i and j.
-            - Move -B: use move_num=-2; ignores i and j.
-
-        Notes:
-            If a move does not require `i` or `j`, those arguments can be provided arbitrarily.
+        - Move A (and its inverse -A): use `move_num=1`. Requires keyword arguments `i` and `j` (chord indices).
+        - Move B: use `move_num=2`. No additional arguments required.
+        - Move -B: use `move_num=-2`. No additional arguments required.
+        - Move C1: use `move_num=3`. Requires keyword argument `i`, the index of the chord to erase.
+        - Move -C1: use `move_num=-3`. Requires keyword arguments:
+            - `after_point`: int — the point after which to insert the new chord.
+            - `sign`: '+' or '-' — the sign of the new chord.
+            - `height`: int — the height of the new chord.
+            - `reverse_points`: bool, optional — whether to use a wrapped point insertion (default: False).
 
         Parameters
         ----------
         move_num : int
             The move identifier.
-        i, j : int
-            Indices of chords involved in the move. May not be required by the move.
+        **kwargs :
+            Keyword arguments required for the specific move.
 
         Returns
         -------
@@ -203,14 +208,32 @@ class ClaspDiagram:
             The result of applying the move.
         """
         import clasp_diagrams.moves as moves
-        num_to_move = {1: moves.exchange_heights,
-                       2: moves.cyclic_height_shift,
-                      -2: moves.inverse_cyclic_height_shift}
+        MOVES = {
+                1: moves.exchange_heights,
+                2: moves.cyclic_height_shift,
+                -2: moves.inverse_cyclic_height_shift,
+                3: moves.erase_isolated_chord,
+                -3: moves.add_isolated_chord,
+                }
         
         try:
-            move = num_to_move[move_num]
+            move = MOVES[move_num]
         except KeyError:
-            allowed = ', '.join(f"{k}: {v.__name__}" for k, v in num_to_move.items())
+            allowed = ', '.join(f"{k}: {v.__name__}" for k, v in MOVES.items())
             raise ValueError(f"Invalid move_num={move_num}. Must be one of: {allowed}")
         
-        return move(clasp=self, i=i, j=j)
+        return move(clasp=self, **kwargs)
+    
+    def move_help(move_num: int) -> str:
+        import clasp_diagrams.moves as moves
+        MOVES = {
+            1: moves.exchange_heights,
+            2: moves.cyclic_height_shift,
+            -2: moves.inverse_cyclic_height_shift,
+            3: moves.erase_isolated_chord,
+            -3: moves.add_isolated_chord,
+        }
+        try:
+            return MOVES[move_num].__doc__
+        except KeyError:
+            return f"No such move: {move_num}."
