@@ -94,7 +94,7 @@ def exchange_heights(clasp: ClaspDiagram, *, i, j) -> ClaspDiagram:
         raise ImplementationError("Move A failed to produce an isotopic clasp.")
 
 # ==================== move B and -B: cyclic_height_shift ====================
-def cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> ClaspDiagram:
+def cyclic_height_shift(clasp: ClaspDiagram) -> ClaspDiagram:
     """
     Move B: Cyclic height shift (+1 to each chord's height).
     This move can always be applied.
@@ -133,7 +133,7 @@ def cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> ClaspDiagram:
     else:
         raise ImplementationError("Move B failed to produce an isotopic clasp.")
     
-def inverse_cyclic_height_shift(clasp: ClaspDiagram, *, i=None, j=None) -> ClaspDiagram:
+def inverse_cyclic_height_shift(clasp: ClaspDiagram) -> ClaspDiagram:
     """
     Move -B: Inverse cyclic height shift (-1 to each chord's height).
     This move can always be applied.
@@ -202,7 +202,7 @@ def valid_erase_isolated_chord(clasp: ClaspDiagram, i):
     
     return matrix[i - 1]
 
-def erase_isolated_chord(clasp: ClaspDiagram, *, i, j=None) -> tuple[ClaspDiagram, ChordForMatrix]:
+def erase_isolated_chord(clasp: ClaspDiagram, *, i) -> tuple[ClaspDiagram, ChordForMatrix]:
     """
     Move C1: Erase an isolated chord.
 
