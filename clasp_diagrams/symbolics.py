@@ -39,7 +39,7 @@ def get_l_matrix(clasp_matrix: tuple[ChordForMatrix]) -> np.ndarray:
 
     return L
 
-def get_le_matrix(e_matrix: np.ndarray, l_matrix: np.ndarray) -> sp.Matrix:
+def get_le_matrix(e_matrix: np.ndarray, l_matrix: np.ndarray) -> np.ndarray:
     """
     Returns L + E.
 
